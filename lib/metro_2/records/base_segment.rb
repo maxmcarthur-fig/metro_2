@@ -81,6 +81,16 @@ module Metro2::Records
       super + @appendages.map(&:to_metro2).join
     end
 
+    def self.from_metro2(line)
+      ptr = 0
+      new.tap do |r|
+        fields.collect do |field|
+          r.send("#{field}_from_metro2", line[ptr..])
+          ptr += r.instance_variable_get("@#{field}").length
+        end
+      end
+    end
+
     def set_record_descriptor_word
       self.record_descriptor_word = LENGTH + @appendages.sum { |appendage| appendage.class::LENGTH }
     end

@@ -23,6 +23,16 @@ module Metro2
       segments.collect { |r| r.to_metro2 }.join("\n") + "\n"
     end
 
+    def self.parse(file)
+      # One header line, plenty of records, then one trailer line.
+      line_count = file.length
+      new.tap do |record|
+        record.instance_variable_set(:@header, Records::HeaderSegment.from_metro2(file[0]))
+        record.instance_variable_set(:@base_segments, file[1..line_count - 2].map { |l| Records::BaseSegment.from_metro2(l) })
+        record.instance_variable_set(:@trailer, Records::TrailerSegment.from_metro2(file[-1]))
+      end
+    end
+
     def trailer_from_base_segments
       status_code_count = Hash.new(0)
       num_ssn = 0

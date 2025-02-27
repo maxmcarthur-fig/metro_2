@@ -18,6 +18,10 @@ module Metro2
         val = instance_variable_get("@#{name}")
         Metro2.alphanumeric_to_metro2(val, required_length, permitted_chars, name)
       end
+
+      define_method "#{name}_from_metro2" do |str|
+        instance_variable_set("@#{name}", str[0...required_length])
+      end
     end
 
     def numeric_field(name, required_length, is_monetary: false, possible_values: nil)
@@ -39,6 +43,10 @@ module Metro2
         Metro2.numeric_to_metro2(val, required_length, is_monetary: is_monetary,
                                  name: name, possible_values: possible_values)
       end
+
+      define_method "#{name}_from_metro2" do |str|
+        instance_variable_set("@#{name}", str[0...required_length])
+      end
     end
 
     def alphanumeric_const_field(name, required_length, val, permitted_chars = Metro2::ALPHANUMERIC)
@@ -54,6 +62,10 @@ module Metro2
       define_method "#{name}_to_metro2" do
         Metro2.alphanumeric_to_metro2(val, required_length, permitted_chars, name)
       end
+
+      define_method "#{name}_from_metro2" do |str|
+        instance_variable_set("@#{name}", str[0...required_length])
+      end
     end
 
     def numeric_const_field(name, required_length, val, is_monetary = false)
@@ -67,6 +79,10 @@ module Metro2
       # to_metro2
       define_method "#{name}_to_metro2" do
         Metro2.numeric_to_metro2(val, required_length, is_monetary: is_monetary)
+      end
+
+      define_method "#{name}_from_metro2" do |str|
+        instance_variable_set("@#{name}", str[0...required_length])
       end
     end
 
@@ -95,6 +111,10 @@ module Metro2
 
         Metro2.numeric_to_metro2(val, 8)
       end
+
+      define_method "#{name}_from_metro2" do |str|
+        instance_variable_set("@#{name}", str[0...8])
+      end
     end
 
     def timestamp_field(name)
@@ -116,6 +136,10 @@ module Metro2
         val = instance_variable_get("@#{name}")
         val = val&.strftime('%m%d%Y%H%M%S')
         Metro2.numeric_to_metro2(val, 14)
+      end
+
+      define_method "#{name}_from_metro2" do |str|
+        instance_variable_set("@#{name}", str[0...14])
       end
     end
   end
